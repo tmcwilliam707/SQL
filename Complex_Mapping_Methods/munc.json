@@ -1,0 +1,254 @@
+{
+    "node": [
+      {
+        "node_id": "1713904674283",
+        "node_type": "DATA_SOURCE",
+        "node_setting": {
+          "name": "recintos_municipales_inspire_peninbal_etrs89",
+          "alias": "mu"
+        }
+      },
+      {
+        "node_id": "1713904687633",
+        "node_type": "DATA_SOURCE",
+        "node_setting": {
+          "name": "recintos_municipales_inspire_canarias_regcan95",
+          "alias": "mu"
+        }
+      },
+      {
+        "node_id": "1713904702849",
+        "node_type": "UNION",
+        "node_setting": ""
+      },
+      {
+        "node_id": "1713904736600",
+        "node_type": "NDM_MAPPING",
+        "node_setting": {
+          "mapping_rule": [
+            {
+              "input_field_group": {
+                "scenario": [
+                  {
+                    "condition": [
+                      [
+                        {
+                          "operator": "LIKE",
+                          "source_field": "mu.NAMEUNIT",
+                          "value": "%/%"
+                        }
+                      ]
+                    ],
+                    "field": [
+                      {
+                        "action": [
+                          {
+                            "action_type": "SPLIT",
+                            "delimiter": "/"
+                          },
+                          {
+                            "action_type": "ELEMENT_AT",
+                            "value": 1
+                          }
+                        ],
+                        "field_type": "SOURCE_FIELD",
+                        "name": "mu.NAMEUNIT"
+                      }
+                    ]
+                  }
+                ],
+                "default": [
+                  {
+                    "field": [
+                      {
+                        "field_type": "SOURCE_FIELD",
+                        "name": "mu.NAMEUNIT"
+                      }
+                    ]
+                  }
+                ]
+              },
+              "output_field": [
+                {
+                  "path": "/FeatureProto/territory/name/-",
+                  "json_template": "{\\\"language\\\":[\\\"es\\\"],\\\"name_type\\\":\\\"PRIMARY_FOR_LANGUAGE\\\",\\\"unparsed_name\\\":\\\"$value\\\"}"
+                }
+              ]
+            },
+            {
+              "input_field_group": {
+                "scenario": [
+                  {
+                    "condition": [
+                      [
+                        {
+                          "operator": "LIKE",
+                          "source_field": "mu.NAMEUNIT",
+                          "value": "%/%"
+                        }
+                      ]
+                    ],
+                    "field": [
+                      {
+                        "action": [
+                          {
+                            "action_type": "TO_LIST"
+                          },
+                          {
+                            "action_type": "ELEMENT_AT",
+                            "value": 0
+                          }
+                        ],
+                        "field_type": "SOURCE_FIELD",
+                        "name": "mu.NAMEUNIT"
+                      }
+                    ]
+                  }
+                ],
+                "default": []
+              },
+              "output_field": [
+                {
+                  "path": "/FeatureProto/territory/name/-",
+                  "json_template": "{\\\"language\\\":[\\\"ca\\\"],\\\"name_type\\\":\\\"PRIMARY_FOR_LANGUAGE\\\",\\\"unparsed_name\\\":\\\"$value\\\"}"
+                }
+              ]
+            },
+            {
+              "input_field_group": {
+                "field": [
+                  {
+                    "action": [],
+                    "field_type": "CONSTANT_STRING",
+                    "value": "ES"
+                  },
+                  {
+                    "action": [],
+                    "field_type": "SOURCE_FIELD",
+                    "name": "mu.NATCODE"
+                  }
+                ],
+                "action": [
+                  {
+                    "action_type": "CONCATENATE",
+                    "delimiter": "-"
+                  }
+                ]
+              },
+              "output_field": [
+                {
+                  "path": "/FeatureProto/territory/territory_code"
+                }
+              ]
+            },
+            {
+              "input_field_group": {
+                "field": [
+                  {
+                    "field_type": "SOURCE_FIELD",
+                    "name": "mu.NATCODE"
+                  }
+                ],
+                "action": []
+              },
+              "output_field": [
+                {
+                  "path": "/FeatureProto/history/0/source_key"
+                }
+              ]
+            },
+            {
+              "input_field_group": {
+                "field": [
+                  {
+                    "action": [
+                      {
+                        "action_type": "TO_FLOAT"
+                      },
+                      {
+                        "action_type": "FLOOR"
+                      }
+                    ],
+                    "field_type": "SOURCE_FIELD",
+                    "name": "pop.POBLACION_MUNI"
+                  }
+                ]
+              },
+              "output_field": [
+                {
+                  "path": "/FeatureProto/territory/population/population"
+                }
+              ]
+            }
+          ],
+          "lookup": [],
+          "default_feature_container_proto": "{\n  \"FeatureProto\": {\n    \"iso_country_code\": \"ESP\",\n    \"country_code\": \"ES\",\n    \"feature_type\": [\n      \"TERRITORY\"\n    ],\n    \"representative_point_type\": \"ALGORITHMIC\",\n    \"representative_point\": {},\n    \"territory\": {\n      \"territory_category\": [\n        \"ADMINISTRATIVE\",\n        \"CENSUS\",\n        \"POSTAL\"\n      ],\n      \"territory_type\": \"MUNICIPALITY\",\n      \"population\": [\n        {\n          \"is_estimate\": false,\n          \"population_type\": [\n            \"OFFICIAL\"\n          ],\n          \"year\": 2024\n        }\n      ],\n      \"boundary\": [\n        {\n          \"boundary_type\": [\n            \"ADMINISTRATIVE\",\n            \"CENSUS\",\n            \"POSTAL\"\n          ]\n        }\n      ],\n      \"history\": [\n        {}\n      ]\n    }\n  }\n}",
+          "feature_geometry_field": "mu.wkb",
+          "feature_id_field": "mu.feature_id"
+        }
+      },
+      {
+        "node_id": "1714000919667",
+        "node_type": "DATA_SOURCE",
+        "node_setting": {
+          "name": "MUNICIPIOS",
+          "alias": "pop"
+        }
+      },
+      {
+        "node_id": "1714001011225",
+        "node_type": "JOIN",
+        "node_setting": {
+          "attribute_join": {
+            "join_by": [
+              {
+                "field1": "mu.NAMEUNIT",
+                "field2": "pop.NOMBRE_ACTUAL"
+              }
+            ]
+          },
+          "join_method": "INNER"
+        }
+      },
+      {
+        "node_id": "1714001311910",
+        "node_type": "AGGREGATE",
+        "node_setting": {
+          "group_by": [
+            "mu.NAMEUNIT"
+          ],
+          "selection_method_in_group": "SELECT & MERGE",
+          "attribute_handling": {
+            "operation": "SUM",
+            "field": "pop.POBLACION_MUNI"
+          }
+        }
+      }
+    ],
+    "edge": [
+      {
+        "source": "1713904687633",
+        "target": "1713904702849"
+      },
+      {
+        "source": "1713904674283",
+        "target": "1713904702849"
+      },
+      {
+        "source": "1713904702849",
+        "target": "1714001011225"
+      },
+      {
+        "source": "1714000919667",
+        "target": "1714001011225"
+      },
+      {
+        "source": "1714001011225",
+        "target": "1714001311910"
+      },
+      {
+        "source": "1714001311910",
+        "target": "1713904736600"
+      }
+    ]
+  }
