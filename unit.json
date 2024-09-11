@@ -1,0 +1,3 @@
+"^(UNIT|APARTMENT|FLAT|STUDIO|SUITE) (\\d{1,4}) (\\D{3,})$"
+
+

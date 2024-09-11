@@ -1,0 +1,8 @@
+SELECT user_id
+FROM user_fundraiser_summary
+WHERE donation_date BETWEEN CURRENT_DATE - INTERVAL '30' DAY AND CURRENT_DATE
+GROUP BY user_id
+HAVING SUM(total_amount) > 100
+ORDER BY user_id;
+
+WHERE CUURENT_DATE - 30 + CURRENT_DATE 
